@@ -28,6 +28,11 @@ class HtmlView extends AbstractHtmlView {
     protected $name;
 
     /**
+     * @var $stylesheet string Le nom de la feuille de styles associées à la vue.
+     */
+    protected $stylesheet;
+
+    /**
      * @var $defaultModel string Le nom du model par défaut.
      */
     protected $defaultModel;
@@ -35,6 +40,10 @@ class HtmlView extends AbstractHtmlView {
     public function __construct(AbstractModel $model = null, \SplPriorityQueue $paths = null) {
 
         $this->defaultModel = $this->getName();
+
+        if (!isset($this->stylesheet)) {
+            $this->stylesheet = strtolower($this->getName());
+        }
 
         $model = isset($model) ? $model : $this->getModel();
 
@@ -46,12 +55,14 @@ class HtmlView extends AbstractHtmlView {
      *
      * @return  \SplPriorityQueue  The paths queue.
      *
-     * @since   1.0
+     * @since       1.0
+     * @deprecated  2.0  In 2.0, a RendererInterface object will be required which will manage paths.
      */
     protected function loadPaths() {
 
         $paths = new \SplPriorityQueue;
         $paths->insert(JPATH_THEME . '/html/views/' . strtolower($this->getName()), 1);
+        $paths->insert(JPATH_THEME . '/css/views/', 2);
         $this->paths = $paths;
 
         return $this->paths;
@@ -136,6 +147,15 @@ class HtmlView extends AbstractHtmlView {
     public function render() {
 
         $this->beforeRender();
+
+        // On inclut la feuille de style si elle existe.
+        $path = $this->getPath($this->stylesheet, 'css');
+        if ($path !== false) {
+            $app = Web::getInstance();
+            $doc = $this->getDocument();
+            $uri = str_replace(JPATH_BASE . "/", $app->get('uri.base.path'), $path);
+            $doc->addStylesheet($uri);
+        }
 
         return parent::render();
     }
