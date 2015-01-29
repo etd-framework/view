@@ -12,6 +12,7 @@ namespace EtdSolutions\View;
 use EtdSolutions\Application\Web;
 use EtdSolutions\Document\Document;
 use EtdSolutions\Model\Model;
+use Joomla\Language\Text;
 use Joomla\Model\AbstractModel;
 use Joomla\View\AbstractHtmlView;
 
@@ -37,6 +38,11 @@ class HtmlView extends AbstractHtmlView {
      */
     protected $defaultModel;
 
+    /**
+     * @var Text
+     */
+    protected $text;
+
     public function __construct(AbstractModel $model = null, \SplPriorityQueue $paths = null) {
 
         $this->defaultModel = $this->getName();
@@ -44,6 +50,9 @@ class HtmlView extends AbstractHtmlView {
         if (!isset($this->stylesheet)) {
             $this->stylesheet = strtolower($this->getName());
         }
+
+        $this->text = Web::getInstance()
+                         ->getText();
 
         $model = isset($model) ? $model : $this->getModel();
 
