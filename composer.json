@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": ">=5.4",
-    "joomla/model": "~1.0",
+    "joomla/model": "~2.0@dev",
     "joomla/view": "~1.0",
     "etdsolutions/application": "@dev",
     "etdsolutions/document": "@dev",
