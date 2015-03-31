@@ -9,19 +9,16 @@
 
 namespace EtdSolutions\View;
 
-use EtdSolutions\Application\Web;
-use EtdSolutions\Document\Document;
 use EtdSolutions\Model\Model;
-use Joomla\Language\Text;
-use Joomla\Model\AbstractModel;
-use Joomla\View\AbstractHtmlView;
+use Joomla\Renderer\RendererInterface;
+use Joomla\View\BaseHtmlView;
 
-defined('_JEXEC') or die;
+
 
 /**
  * Vue HTML
  */
-class HtmlView extends AbstractHtmlView {
+class HtmlView extends BaseHtmlView {
 
     /**
      * @var $name string Le nom de la vue.
@@ -29,52 +26,25 @@ class HtmlView extends AbstractHtmlView {
     protected $name;
 
     /**
-     * @var $stylesheet string Le nom de la feuille de styles associées à la vue.
-     */
-    protected $stylesheet;
-
-    /**
      * @var $defaultModel string Le nom du model par défaut.
      */
     protected $defaultModel;
 
     /**
-     * @var Text
+     * Method to instantiate the view.
+     *
+     * @param   Model              $model     The model object.
+     * @param   RendererInterface  $renderer  The renderer object.
+     *
+     * @since   __DEPLOY_VERSION__
      */
-    protected $text;
-
-    public function __construct(AbstractModel $model = null, \SplPriorityQueue $paths = null) {
+    public function __construct(Model $model = null, RendererInterface $renderer = null) {
 
         $this->defaultModel = $this->getName();
 
-        if (!isset($this->stylesheet)) {
-            $this->stylesheet = strtolower($this->getName());
-        }
+        $model    = isset($model) ? $model : $this->getModel();
 
-        $this->text = Web::getInstance()
-                         ->getText();
-
-        $model = isset($model) ? $model : $this->getModel();
-
-        parent::__construct($model, $paths);
-    }
-
-    /**
-     * Method to load the paths queue.
-     *
-     * @return  \SplPriorityQueue  The paths queue.
-     *
-     * @since       1.0
-     * @deprecated  2.0  In 2.0, a RendererInterface object will be required which will manage paths.
-     */
-    protected function loadPaths() {
-
-        $paths = new \SplPriorityQueue;
-        $paths->insert(JPATH_THEME . '/html/views/' . strtolower($this->getName()), 1);
-        $paths->insert(JPATH_THEME . '/css/views/', 2);
-        $this->paths = $paths;
-
-        return $this->paths;
+        parent::__construct($model, $renderer);
     }
 
     /**
@@ -83,7 +53,7 @@ class HtmlView extends AbstractHtmlView {
      * @param string $name           Le nom du modèle. Facultatif.
      * @param   bool $ignore_request Utilisé pour ignorer la mise à jour de l'état depuis l'input.
      *
-     * @return AbstractModel Le modèle.
+     * @return Model Le modèle.
      *
      * @throws \RuntimeException
      */
@@ -101,19 +71,6 @@ class HtmlView extends AbstractHtmlView {
 
         return Model::getInstance($name, $ignore_request);
 
-    }
-
-    /**
-     * Méthode pour renvoyer le document HTML associé à l'application.
-     *
-     * @return Document Le document HTML.
-     *
-     * @note Juste un proxy pour Web::getDocument()
-     */
-    protected function getDocument() {
-
-        return Web::getInstance()
-                  ->getDocument();
     }
 
     /**
@@ -144,28 +101,5 @@ class HtmlView extends AbstractHtmlView {
      */
     protected function beforeRender() {
 
-    }
-
-    /**
-     * Méthode pour effectuer le rendu de la vue.
-     *
-     * @return  string  La vue rendue.
-     *
-     * @throws  \RuntimeException
-     */
-    public function render() {
-
-        $this->beforeRender();
-
-        // On inclut la feuille de style si elle existe.
-        $path = $this->getPath($this->stylesheet, 'css');
-        if ($path !== false) {
-            $app = Web::getInstance();
-            $doc = $this->getDocument();
-            $uri = str_replace(JPATH_BASE . "/", $app->get('uri.base.path'), $path);
-            $doc->addStylesheet($uri);
-        }
-
-        return parent::render();
     }
 }

@@ -15,11 +15,8 @@
   ],
   "require": {
     "php": ">=5.4",
-    "joomla/model": "~2.0@dev",
-    "joomla/view": "~2.0@dev",
-    "etdsolutions/application": "@dev",
-    "etdsolutions/document": "@dev",
-    "etdsolutions/model": "@dev"
+    "etdsolutions/model": "@dev",
+    "joomla/view": "2.0.*@dev"
   },
   "autoload": {
     "psr-4": {
