@@ -15,9 +15,9 @@
   ],
   "require": {
     "php": "^5.5.9|~7.0",
+    "etdsolutions/model": "@dev",
     "joomla/di": "~2.0@dev",
     "joomla/view": "~2.0@dev",
-    "joomla/model": "~2.0@dev",
     "joomla/renderer": "~2.0@dev"
   },
   "autoload": {
