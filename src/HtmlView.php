@@ -9,7 +9,7 @@
 
 namespace EtdSolutions\View;
 
-use EtdSolutions\Model\Model;
+use EtdSolutions\Model\ModelInterface;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\DI\ContainerAwareTrait;
 use Joomla\Renderer\RendererInterface;
@@ -25,17 +25,17 @@ class HtmlView extends BaseHtmlView implements ContainerAwareInterface {
     /**
      * The model object.
 	 *
-	 * @var Model
+	 * @var ModelInterface
 	 */
 	protected $model;
 
 	/**
 	 * Method to instantiate the view.
 	 *
-	 * @param  Model              $model     The model object.
+	 * @param  ModelInterface     $model     The model object.
 	 * @param  RendererInterface  $renderer  The renderer object.
 	 */
-	public function __construct(Model $model, RendererInterface $renderer) {
+	public function __construct(ModelInterface $model, RendererInterface $renderer) {
 
 		parent::__construct($renderer);
 
